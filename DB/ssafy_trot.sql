@@ -18,41 +18,41 @@ USE `ssafy_trot`;
 
 -- 테이블 ssafy_trot.Article 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Article` (
-  `b_idx` int(11) NOT NULL,
+  `b_idx` int(11) NOT NULL AUTO_INCREMENT,
   `a_url` varchar(500) DEFAULT '',
   `a_title` varchar(100) DEFAULT '',
   `a_content` varchar(200) DEFAULT '',
   `a_img` varchar(100) DEFAULT '',
   `a_member` varchar(100) DEFAULT '',
-  PRIMARY KEY (`b_idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `b_type` int(11) NOT NULL DEFAULT 2,
+  PRIMARY KEY (`b_idx`,`b_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=554 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
 -- 테이블 ssafy_trot.Board 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Board` (
-  `b_idx` int(11) NOT NULL AUTO_INCREMENT,
+  `b_idx` int(11) NOT NULL,
   `b_type` int(11) NOT NULL DEFAULT 0,
   `b_good` int(11) DEFAULT 0,
   `b_bookmark` int(11) DEFAULT 0,
   `b_reply` int(11) DEFAULT NULL,
-  PRIMARY KEY (`b_idx`),
-  CONSTRAINT `Board_FK` FOREIGN KEY (`b_idx`) REFERENCES `Article` (`b_idx`),
-  CONSTRAINT `Board_FK_1` FOREIGN KEY (`b_idx`) REFERENCES `Video` (`b_idx`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`b_idx`,`b_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
 -- 테이블 ssafy_trot.Bookmark 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Bookmark` (
   `u_email` varchar(100) DEFAULT '',
-  `b_idx` int(11) DEFAULT 0,
   `bm_idx` int(11) NOT NULL AUTO_INCREMENT,
+  `b_type` int(11) NOT NULL,
+  `b_idx` int(11) NOT NULL,
   PRIMARY KEY (`bm_idx`),
   KEY `Bookmark_FK` (`u_email`),
-  KEY `Bookmark_FK_1` (`b_idx`),
-  CONSTRAINT `Bookmark_FK` FOREIGN KEY (`b_idx`) REFERENCES `Board` (`b_idx`),
-  CONSTRAINT `Bookmark_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`)
+  KEY `Bookmark_FK_2` (`b_idx`,`b_type`),
+  CONSTRAINT `Bookmark_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
+  CONSTRAINT `Bookmark_FK_2` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
@@ -67,6 +67,17 @@ CREATE TABLE IF NOT EXISTS `BroadCasting` (
   `bc_title` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`bc_idx`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.Contents 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Contents` (
+  `b_idx` int(11) NOT NULL,
+  `b_type` int(11) NOT NULL,
+  PRIMARY KEY (`b_idx`,`b_type`),
+  CONSTRAINT `Contents_FK` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Article` (`b_idx`, `b_type`),
+  CONSTRAINT `Contents_FK_1` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Video` (`b_idx`, `b_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -87,28 +98,30 @@ CREATE TABLE IF NOT EXISTS `Following` (
 -- 테이블 ssafy_trot.Good 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Good` (
   `u_email` varchar(100) DEFAULT '',
-  `b_idx` int(11) DEFAULT 0,
   `g_idx` int(11) NOT NULL AUTO_INCREMENT,
+  `b_type` int(11) NOT NULL,
+  `b_idx` int(11) NOT NULL,
   PRIMARY KEY (`g_idx`),
   KEY `Good_FK` (`u_email`),
-  KEY `Good_FK_1` (`b_idx`),
-  CONSTRAINT `Good_FK` FOREIGN KEY (`b_idx`) REFERENCES `Board` (`b_idx`),
-  CONSTRAINT `Good_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`)
+  KEY `Good_FK_2` (`b_idx`,`b_type`),
+  CONSTRAINT `Good_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
+  CONSTRAINT `Good_FK_2` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
 -- 테이블 ssafy_trot.Reply 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Reply` (
-  `b_idx` int(11) NOT NULL DEFAULT 0,
   `r_idx` int(11) NOT NULL AUTO_INCREMENT,
   `u_name` varchar(50) NOT NULL DEFAULT '',
   `r_content` varchar(200) NOT NULL DEFAULT '',
   `u_email` varchar(100) NOT NULL DEFAULT '',
+  `b_type` int(11) NOT NULL,
+  `b_idx` int(11) NOT NULL,
   PRIMARY KEY (`r_idx`),
-  KEY `Reply_FK` (`b_idx`),
   KEY `Reply_FK_1` (`u_email`),
-  CONSTRAINT `Reply_FK` FOREIGN KEY (`b_idx`) REFERENCES `Board` (`b_idx`),
+  KEY `Reply_FK` (`b_idx`,`b_type`),
+  CONSTRAINT `Reply_FK` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`),
   CONSTRAINT `Reply_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -118,8 +131,10 @@ CREATE TABLE IF NOT EXISTS `Reply` (
 CREATE TABLE IF NOT EXISTS `Singer` (
   `s_idx` int(11) NOT NULL AUTO_INCREMENT,
   `s_name` varchar(50) NOT NULL DEFAULT '',
+  `s_url` varchar(200) DEFAULT '',
+  `s_img` varchar(500) DEFAULT '',
   PRIMARY KEY (`s_idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -137,13 +152,14 @@ CREATE TABLE IF NOT EXISTS `UserInfo` (
 
 -- 테이블 ssafy_trot.Video 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Video` (
-  `b_idx` int(11) NOT NULL,
+  `b_idx` int(11) NOT NULL AUTO_INCREMENT,
   `v_url` varchar(500) NOT NULL DEFAULT '',
   `v_title` varchar(100) NOT NULL DEFAULT '',
   `v_content` varchar(200) DEFAULT '',
   `v_member` varchar(50) DEFAULT '',
-  PRIMARY KEY (`b_idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `b_type` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`b_idx`,`b_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=1597 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
