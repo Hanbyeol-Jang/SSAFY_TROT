@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `Board` (
   `b_idx` int(11) NOT NULL AUTO_INCREMENT,
   `b_type` int(11) NOT NULL DEFAULT 0,
   `b_good` int(11) DEFAULT 0,
-  `b_bookmark` int(11) DEFAULT 0,
   `b_reply` int(11) DEFAULT 0,
   `b_title` varchar(300) NOT NULL DEFAULT '',
   `b_thumbnail` varchar(200) DEFAULT '',
@@ -31,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Board` (
   `b_member` varchar(100) DEFAULT '',
   `b_content` varchar(500) DEFAULT '',
   PRIMARY KEY (`b_idx`,`b_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=235 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=516 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -44,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `BroadCasting` (
   `bc_member` varchar(50) DEFAULT '',
   `bc_title` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`bc_idx`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=861 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1382 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -58,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `Following` (
   KEY `Following_FK` (`s_idx`),
   CONSTRAINT `Favorite_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
   CONSTRAINT `Following_FK` FOREIGN KEY (`s_idx`) REFERENCES `Singer` (`s_idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -73,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `Good` (
   KEY `Good_FK_2` (`b_idx`,`b_type`),
   CONSTRAINT `Good_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
   CONSTRAINT `Good_FK_2` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
