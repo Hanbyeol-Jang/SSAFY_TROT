@@ -16,6 +16,16 @@
 CREATE DATABASE IF NOT EXISTS `ssafy_trot` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `ssafy_trot`;
 
+-- 테이블 ssafy_trot.Admin 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Admin` (
+  `a_broadName` varchar(100) NOT NULL,
+  `a_broadUrl` varchar(500) NOT NULL,
+  `a_idx` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`a_idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
 -- 테이블 ssafy_trot.Board 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Board` (
   `b_idx` int(11) NOT NULL AUTO_INCREMENT,
@@ -30,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `Board` (
   `b_member` varchar(100) DEFAULT '',
   `b_content` varchar(500) DEFAULT '',
   PRIMARY KEY (`b_idx`,`b_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=516 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=569 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -43,7 +53,46 @@ CREATE TABLE IF NOT EXISTS `BroadCasting` (
   `bc_member` varchar(50) DEFAULT '',
   `bc_title` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`bc_idx`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1382 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1611 DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.CoGood 구조 내보내기
+CREATE TABLE IF NOT EXISTS `CoGood` (
+  `co_idx` int(11) NOT NULL,
+  `u_email` varchar(100) NOT NULL,
+  KEY `CoGood_FK` (`co_idx`),
+  KEY `CoGood_FK_1` (`u_email`),
+  CONSTRAINT `CoGood_FK` FOREIGN KEY (`co_idx`) REFERENCES `Community` (`co_idx`),
+  CONSTRAINT `CoGood_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.Community 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Community` (
+  `co_idx` int(11) NOT NULL AUTO_INCREMENT,
+  `co_content` varchar(500) NOT NULL DEFAULT '',
+  `co_image` varchar(500) DEFAULT '',
+  `u_email` varchar(100) NOT NULL,
+  `co_date` varchar(100) DEFAULT '',
+  PRIMARY KEY (`co_idx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.CoReply 구조 내보내기
+CREATE TABLE IF NOT EXISTS `CoReply` (
+  `cr_idx` int(11) NOT NULL AUTO_INCREMENT,
+  `cr_content` varchar(200) NOT NULL DEFAULT '',
+  `u_email` varchar(100) NOT NULL DEFAULT '',
+  `co_idx` int(11) NOT NULL,
+  PRIMARY KEY (`cr_idx`),
+  KEY `CoReply_FK` (`co_idx`),
+  KEY `CoReply_FK_1` (`u_email`),
+  CONSTRAINT `CoReply_FK` FOREIGN KEY (`co_idx`) REFERENCES `Community` (`co_idx`),
+  CONSTRAINT `CoReply_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -57,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `Following` (
   KEY `Following_FK` (`s_idx`),
   CONSTRAINT `Favorite_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
   CONSTRAINT `Following_FK` FOREIGN KEY (`s_idx`) REFERENCES `Singer` (`s_idx`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -72,14 +121,38 @@ CREATE TABLE IF NOT EXISTS `Good` (
   KEY `Good_FK_2` (`b_idx`,`b_type`),
   CONSTRAINT `Good_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
   CONSTRAINT `Good_FK_2` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.Kakao 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Kakao` (
+  `k_id` varchar(100) NOT NULL,
+  `k_nickname` varchar(100) DEFAULT '',
+  `k_thumbnail_image` varchar(500) DEFAULT '',
+  `k_profile_image` varchar(500) DEFAULT '',
+  `k_pw` varchar(100) DEFAULT NULL,
+  `k_isAdmin` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`k_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.Mypage 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Mypage` (
+  `u_email` varchar(100) NOT NULL,
+  `co_idx` int(11) NOT NULL,
+  KEY `Mypage_FK` (`u_email`),
+  KEY `Mypage_FK_1` (`co_idx`),
+  CONSTRAINT `Mypage_FK` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
+  CONSTRAINT `Mypage_FK_1` FOREIGN KEY (`co_idx`) REFERENCES `Community` (`co_idx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
 -- 테이블 ssafy_trot.Reply 구조 내보내기
 CREATE TABLE IF NOT EXISTS `Reply` (
   `r_idx` int(11) NOT NULL AUTO_INCREMENT,
-  `u_name` varchar(50) NOT NULL DEFAULT '',
   `r_content` varchar(200) NOT NULL DEFAULT '',
   `u_email` varchar(100) NOT NULL DEFAULT '',
   `b_type` int(11) NOT NULL,
@@ -89,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `Reply` (
   KEY `Reply_FK_2` (`b_idx`,`b_type`),
   CONSTRAINT `Reply_FK_1` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
   CONSTRAINT `Reply_FK_2` FOREIGN KEY (`b_idx`, `b_type`) REFERENCES `Board` (`b_idx`, `b_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
 
@@ -99,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `Singer` (
   `s_name` varchar(50) NOT NULL DEFAULT '',
   `s_url` varchar(200) DEFAULT '',
   `s_img` varchar(500) DEFAULT '',
-  `s_cafeUrl` varchar(100) DEFAULT NULL,
+  `s_cafeUrl` varchar(100) DEFAULT '',
   PRIMARY KEY (`s_idx`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
@@ -107,13 +180,26 @@ CREATE TABLE IF NOT EXISTS `Singer` (
 
 -- 테이블 ssafy_trot.UserInfo 구조 내보내기
 CREATE TABLE IF NOT EXISTS `UserInfo` (
-  `u_pw` varchar(50) NOT NULL DEFAULT '',
+  `u_pw` varchar(50) DEFAULT '',
   `u_name` varchar(50) NOT NULL DEFAULT '',
   `u_email` varchar(100) NOT NULL DEFAULT '',
-  `u_img` varchar(100) DEFAULT '',
-  `u_pw2` varchar(50) DEFAULT '',
-  `u_isAdmin` tinyint(1) NOT NULL DEFAULT 0,
+  `u_profileImg` varchar(500) DEFAULT '',
+  `u_isAdmin` tinyint(1) DEFAULT 0,
+  `u_thumbnail` varchar(500) DEFAULT '',
   PRIMARY KEY (`u_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 내보낼 데이터가 선택되어 있지 않습니다.
+
+-- 테이블 ssafy_trot.Vote 구조 내보내기
+CREATE TABLE IF NOT EXISTS `Vote` (
+  `u_email` varchar(100) NOT NULL,
+  `s_idx` int(11) NOT NULL,
+  `v_area` varchar(100) NOT NULL,
+  KEY `Vote_FK` (`u_email`),
+  KEY `Vote_FK_1` (`s_idx`),
+  CONSTRAINT `Vote_FK` FOREIGN KEY (`u_email`) REFERENCES `UserInfo` (`u_email`),
+  CONSTRAINT `Vote_FK_1` FOREIGN KEY (`s_idx`) REFERENCES `Singer` (`s_idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 내보낼 데이터가 선택되어 있지 않습니다.
